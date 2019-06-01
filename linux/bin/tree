@@ -1,0 +1,124 @@
+#!/usr/bin/env sh
+# List contents of directories in a tree-like format
+
+#######################################
+# Print usage instructions to STDOUT
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+usage() {
+
+cat <<USAGE
+
+Usage: $SELF [OPTIONS] [DIRECTORY]
+List contents of directories in a tree-like format
+
+Options:
+  -h, --help                Print usage
+
+USAGE
+
+}
+
+#######################################
+# List contents of directories in a tree-like format
+# Arguments:
+#   Directories
+# Returns:
+#   None
+#######################################
+tree() {
+
+  for dir in "$@"; do
+    IGNORES=".git|.gitignore|`extract $dir/.gitignore`"; /usr/bin/tree -aI "${IGNORES%|}" "$dir"
+  done
+
+}
+
+#######################################
+# Extract globs from file
+# Arguments:
+#   Filepath
+# Returns:
+#   None
+#######################################
+extract() {
+
+  IGNORES=''
+
+  # handle read errors
+  test -r "$1" || \
+    return
+
+  # extract globs
+  while read -r line
+  do
+
+    # handle empty lines
+    test -z "${line}" && \
+      continue
+
+    # handle comments
+    test "${line}" != "${line#\#}" && \
+      continue
+
+    # append glob
+    IGNORES="${IGNORES}|${line%/}"
+
+  done < "$1"
+
+  echo "${IGNORES#|}"
+
+}
+
+#######################################
+# Print invalid argument details to STDERR
+# Arguments:
+#   Invalid argument
+# Returns:
+#   None
+#######################################
+invalid() {
+
+cat >&2 <<INVALID
+
+$SELF: unrecognized option '$1'
+Try '$SELF --help' for more information.
+
+INVALID
+
+}
+
+# script reference
+SELF="`basename "$0"`"
+
+# parse arguments
+while [ $# -ne 0 ]
+do
+
+  case "$1" in
+
+    -h|--help)
+      usage
+      exit 0
+      ;;
+
+    -*|--*)
+      invalid "$1"
+      exit 1
+      ;;
+
+    *)
+      tree "$@"
+      exit
+      ;;
+
+  esac
+
+done
+
+# default tree-like list
+# current working directory
+exec tree .

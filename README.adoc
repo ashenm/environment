@@ -1,0 +1,9 @@
+= Environment
+:toc:
+:toc-placement!:
+:warning-caption: :warning:
+:note-caption: :paperclip:
+
+[discrete]
+====== Customise Linux/Windows Operating Environment
+image:https://travis-ci.com/ashenm/environment.svg?branch=master["Build Status", link="https://travis-ci.com/ashenm/environment"]
