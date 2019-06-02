@@ -47,7 +47,7 @@ curl --silent --show-error \
 # gitconfig
 curl --silent --show-error \
     --output /etc/gitconfig \
-    --url https://raw.githubusercontent.com/ashenm/workspace/latest/etc/gitconfig && \
+    --url https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/gitconfig && \
   chmod 644 /etc/gitconfig
 
 # ssh client config
@@ -55,7 +55,7 @@ echo '' | tee -a /etc/ssh/ssh_config && \
   echo 'Include /etc/ssh/workspace' | tee -a /etc/ssh/ssh_config && \
   curl --silent --show-error \
     --output /etc/ssh/workspace \
-    --url https://raw.githubusercontent.com/ashenm/workspace/latest/etc/ssh/workspace && \
+    --url https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/ssh/workspace && \
   chmod 644 /etc/ssh/workspace
 
 # ensure requisite files
