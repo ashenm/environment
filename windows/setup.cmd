@@ -12,7 +12,8 @@
 :: install alias shims
 BITSADMIN /TRANSFER environment-aliases /DOWNLOAD ^
     https://raw.githubusercontent.com/ashenm/environment/releases/windows/aliases.cab %TEMP%\environment-aliases.cab >> NUL && (
-  MKDIR %USERPROFILE%\.environment\aliases && EXPAND -R %TEMP%\environment-aliases.cab %USERPROFILE%\.environment\aliases
+  MKDIR %USERPROFILE%\.environment\aliases
+  EXPAND -R %TEMP%\environment-aliases.cab %USERPROFILE%\.environment\aliases >> NULL
   DEL /F /Q %TEMP%\environment-aliases.cab
 )
 
