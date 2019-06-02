@@ -1,0 +1,22 @@
+dist:
+  xenial
+
+language:
+  minimal
+
+install:
+  make install
+
+script:
+  make build
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  target_branch: releases
+  local_dir: releases
+
+notifications:
+  slack:
+    secure: EDmnIfG+m2fa4Ug2ba7BgaV8AFLxV4IOXFaBEr+WWXepjxxeOGAULcONpawJzV+O3pEjsJKzKriBM1cgtatAwRtKFkZs0ohUQcv+l5pXQ4YT+AU1k+goEE7wXAne1BeIylTsUTMTHv1THnpO/8oJ05zgtQXvscSg6cnVwGod9txRBSkCoE+OKIlygyEkpslBIQ/lPCRHlG26nvsaDIYLkonkajVqF6pvZJXBQNa/ZEcuZ7g8ShfOZwconMnz4FfJCkO8FM2RDybnT/ig1jXvvup/SySQeJh/C3/1MpiFUHXlcPMeg6CJWrnu1c03GAxAvEiyDnJ3qtIzBmaROn3OeVEOma4vUFiVlbUStAwaxqLoP9F2pkFZ/wm9qY6pFAEo5vUaBt3UDVsdrMpnOP6PzBThzI4qbzwGnMsCusx3//E+l1lEZ3/MmG/k1re5z+Y4oYsTwTRFieWGGTu2tlawXBnWvJkLSGid2BfweqpuuWvJKW211cl4FHrHrbI/fg212KXApVOcP0E0D3WopjLXdj+waq2p3ub3pg2Tk4Ec0W1K4U99hrB6kSmdVs27f3ofwgUf2RSDH8oo18gKT7ET2SIv/iRhUM9LRdFF9DPAT7OoWxbUppImO+q8fvZpS839uwNELLJ2GqFPMY47ZPOuyHEn70aBSUL+pCvyB7/4E+g=

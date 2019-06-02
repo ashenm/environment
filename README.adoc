@@ -1,0 +1,24 @@
+= Environment
+:toc:
+:toc-placement!:
+:warning-caption: :warning:
+:note-caption: :paperclip:
+:important-caption: :heavy_exclamation_mark:
+
+[discrete]
+====== Customise Linux/Windows Operating Environment
+image:https://travis-ci.com/ashenm/environment.svg?branch=master["Build Status", link="https://travis-ci.com/ashenm/environment"]
+
+=== Linux
+[source, shell]
+----
+curl -sSL https://raw.githubusercontent.com/ashenm/environment/master/linux/setup | sudo sh -
+----
+
+=== Windows
+[source, batch]
+----
+BITSADMIN /TRANSFER environment-setup /DOWNLOAD ^
+  https://raw.githubusercontent.com/ashenm/environment/master/windows/setup.cmd %TEMP%\environment-setup.cmd >> NUL && ^
+%TEMP%\environment-setup.cmd && DEL /S /Q %TEMP%\environment-setup.cmd
+----
