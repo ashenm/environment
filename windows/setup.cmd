@@ -20,7 +20,7 @@ BITSADMIN /TRANSFER environment-aliases /DOWNLOAD ^
 :: clinch user PATH
 :: setx path modifies aggregated path and hence avoiding
 FOR /F "tokens=3 skip=2" %%d IN ('REG QUERY HKCU\Environment /v Path') DO (
-  REG ADD HKCU\Environment /f /v Path /t REG_EXPAND_SZ /d "%%USERPROFILE%%\.environment\aliases;%%d"
+  REG ADD HKCU\Environment /f /v Path /t REG_EXPAND_SZ /d "%%USERPROFILE%%\.environment\aliases;%%d" >> NULL
 )
 
 :: customise command prompt
