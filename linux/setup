@@ -51,9 +51,9 @@ curl --silent --show-error \
   chmod 644 /etc/gitconfig
 
 # ssh client config
-echo '' | \
-    tee -a /etc/ssh/ssh_config >> /dev/null && \
-  echo 'Include /etc/ssh/workspace' | \
+test -s /etc/ssh/ssh_config && \
+  echo '' | tee -a /etc/ssh/ssh_config >> /dev/null
+echo 'Include /etc/ssh/workspace' | \
     tee -a /etc/ssh/ssh_config >> /dev/null && \
   curl --silent --show-error \
     --output /etc/ssh/workspace \
