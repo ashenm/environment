@@ -6,8 +6,8 @@ clean :
 	rm --force --recursive releases
 
 linux : linux/bin linux/sbin releases/linux
-	tar --create --file releases/linux/bin.tar --mode 0755 --owner root --group root --strip-components 1 --transform 's/linux/usr\/local/' linux/bin
-	tar --create --file releases/linux/sbin.tar --mode 0755 --owner root --group root --strip-components 1 --transform 's/linux/usr\/local/' linux/sbin
+	tar --create --file releases/linux/bin.tar --mode 0755 --owner root --group root --strip-components 1 --transform 's|linux|usr/local|' linux/bin
+	tar --create --file releases/linux/sbin.tar --mode 0755 --owner root --group root --strip-components 1 --transform 's|linux|usr/local|' linux/sbin
 
 windows : windows/aliases releases/windows
 	lcab -nr windows/aliases releases/windows/aliases.cab
