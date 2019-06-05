@@ -57,6 +57,12 @@ curl --silent --show-error \
     --url https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/gitconfig && \
   chmod 644 /etc/gitconfig
 
+# gitattributes
+curl --silent --show-error \
+    --output /etc/gitattributes \
+    --url https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/gitattributes && \
+  chmod 644 /etc/gitattributes
+
 # ssh client config
 test -s /etc/ssh/ssh_config && \
   echo '' | tee -a /etc/ssh/ssh_config >> /dev/null
