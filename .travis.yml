@@ -14,8 +14,10 @@ deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
-  target_branch: releases
+  target_branch: $(echo releases-$TRAVIS_BRANCH | sed 's/^releases-master$/releases/')
   local_dir: releases
+  on:
+    all_branches: true
 
 notifications:
   slack:
