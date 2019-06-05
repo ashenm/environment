@@ -44,6 +44,13 @@ curl --silent --show-error \
     --url https://raw.githubusercontent.com/amix/vimrc/master/vimrcs/basic.vim && \
   chmod 644 /usr/share/vim/vimrc
 
+# vim ftplugins
+mkdir --parent /etc/vim/ftplugin && \
+curl --silent --show-error https://github.com/ashenm/workspace/tree/latest/filesystem/etc/vim/ftplugin | \
+  grep -oP '/ashenm/workspace/blob/latest/filesystem/etc/vim/ftplugin/\K[^"]{1,}' | while read -r plugin; do
+    curl --silent --show-error --output "/etc/vim/ftplugin/$plugin" "https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/vim/ftplugin/$plugin" && chmod 644 /etc/vim/ftplugin/$plugin
+done
+
 # gitconfig
 curl --silent --show-error \
     --output /etc/gitconfig \
