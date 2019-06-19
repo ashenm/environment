@@ -35,7 +35,7 @@ curl --silent --show-error \
 # workspace.sh
 curl --silent --show-error \
     --output /etc/profile.d/workspace.sh \
-    --url https://raw.githubusercontent.com/ashenm/workspace/latest/etc/profile.d/workspace.sh && \
+    --url https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/profile.d/workspace.sh && \
   chmod 755 /etc/profile.d/workspace.sh
 
 # vimrc
