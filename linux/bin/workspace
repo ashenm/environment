@@ -164,7 +164,7 @@ test "$GITCONFIG" != "false" && \
   ARGUMENTS="$ARGUMENTS --volume $HOME/.gitconfig:/home/ubuntu/.gitconfig:ro"
 
 # .ssh
-test "$SSHCONFIG" != "false" && \
+test "$SSHCONFIG" != "false" && test -d "$HOME/.ssh" && \
   ARGUMENTS="$ARGUMENTS --volume $HOME/.ssh:/home/ubuntu/.ssh:ro"
 
 # spawn container
