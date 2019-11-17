@@ -133,7 +133,7 @@ do
       ;;
 
     *)
-      DIRECTORY="$1"
+      DIRECTORY="`readlink --canonicalize $1`"
       shift
       ;;
 
