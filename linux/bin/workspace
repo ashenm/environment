@@ -141,6 +141,17 @@ do
 
 done
 
+# check for existing workspace containers
+DEAD="`docker ps --latest --format "{{.Names}}" --filter "ancestor=$IMAGE"`"
+
+# prompt whether to use existing workspace container
+test -n "$DEAD" && \
+  read -p "Spawn existing workspace container $DEAD (Y/N): " RESTART
+
+# attach existing container on request
+test -n "$DEAD" && test "$RESTART" = "y" -o "$RESTART" = "Y" && \
+  exec docker start --attach --interactive $DEAD
+
 # rm
 test "$TEMPORARY" != "false" && \
   ARGUMENTS="$ARGUMENTS --rm"
@@ -177,5 +188,5 @@ test "$SSHCONFIG" != "false" && test -d "$HOME/.ssh" && \
 test "$GNUPGDIR" != "false" && test -d "$HOME/.gnupg" && \
   ARGUMENTS="$ARGUMENTS --volume $HOME/.gnupg:/home/ubuntu/.gnupg"
 
-# spawn container
+# spawn new container
 exec docker run $ARGUMENTS $IMAGE bash --login
