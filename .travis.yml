@@ -19,11 +19,13 @@ deploy:
     script: ./.github/release
     on:
       branch: master
+    skip_cleanup: true
   - provider: script
     script: ./.github/release --prerelease
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH != master
+    skip_cleanup: true
 
 notifications:
   slack:
