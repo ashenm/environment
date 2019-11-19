@@ -72,7 +72,7 @@ echo 1>$STDOUT "${ANSI_YELLOW}Deploying ${PRERELEASE+pre-}release${ANSI_RESET}"
 
 # create release
 RELEASE_ID="$(curl --fail --silent --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/releases" \
-  --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git log --max-count=1 --format="%H")\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false}, \"body\": \"Built from $(git log --max-count=1 --format="%h") on branch $(git branch --show-current)\" }" | jq --raw-output '.id')"
+  --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git log --max-count=1 --format="%H")\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false}, \"body\": \"Built from $(git log --max-count=1 --format="%h") }" | jq --raw-output '.id')"
 
 echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact aliases.cab${ANSI_RESET}"
 
