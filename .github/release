@@ -14,8 +14,9 @@ set -e
 REPOSITORY="ashenm/environment"
 
 # color escapes
+ANSI_RED="\033[31m"
 ANSI_RESET="\033[0m"
-ANSI_YELLOW="\033[33;1m"
+ANSI_YELLOW="\033[33m"
 
 # verbosity
 STDOUT=/dev/stdout
@@ -36,6 +37,11 @@ do
       shift
       ;;
 
+    --tag)
+      TAG_NAME="${2:?Invalid TAG}"
+      shift 2
+      ;;
+
     -*|--*)
       echo >&2 "Invalid option $1"
       exit 1
@@ -47,10 +53,10 @@ done
 
 # ensure requisite files
 test -f releases/windows/aliases.cab && test -f releases/linux/sbin.tar && \
-  test -f releases/linux/bin.tar || { echo >&2 "Missing requisit file(s)"; exit 1; }
+  test -f releases/linux/bin.tar || { echo >&2 "${ANSI_RED}Missing requisit file(s)${ANSI_RESET}"; exit 1; }
 
 # tag (latest++)
-TAG_NAME="$(curl --silent --fail --location --show-error --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/tags" \
+test -z "$TAG_NAME" && TAG_NAME="$(curl --silent --fail --location --show-error --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/tags" \
   | jq --raw-output '.[0]["name"] // "v0" | match("v(\\d+\\.?\\d*?)(\\.\\d*)?$") | .["captures"][0]["string"] | tonumber + .1 | "v" + tostring')"
 
 # strip preceding decimals
@@ -66,7 +72,7 @@ echo 1>$STDOUT "${ANSI_YELLOW}Deploying ${PRERELEASE+pre-}release${ANSI_RESET}"
 
 # create release
 RELEASE_ID="$(curl --fail --silent --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/releases" \
-    --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git log --max-count=1 --format="%H")\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false} }" | jq --raw-output '.id')"
+  --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git log --max-count=1 --format="%H")\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false}, \"body\": \"Built from $(git log --max-count=1 --format="%h") on branch $(git branch --show-current)\" }" | jq --raw-output '.id')"
 
 echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact aliases.cab${ANSI_RESET}"
 
