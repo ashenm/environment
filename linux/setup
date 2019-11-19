@@ -18,12 +18,12 @@ test `id -u` -ne 0 && {
 
 # install bin shims
 curl --silent --show-error --output - \
-    --url https://raw.githubusercontent.com/ashenm/environment/releases/linux/bin.tar | \
+    --url https://github.com/ashenm/environment/releases/latest/download/bin.tar | \
   tar --extract --overwrite --preserve-permissions --file - --directory /
 
 # install sbin shims
 curl --silent --show-error --output - \
-    --url https://raw.githubusercontent.com/ashenm/environment/releases/linux/sbin.tar | \
+    --url https://github.com/ashenm/environment/releases/latest/download/sbin.tar | \
   tar --extract --overwrite --preserve-permissions --file - --directory /
 
 # baseimage.sh

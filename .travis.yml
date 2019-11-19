@@ -4,6 +4,10 @@ dist:
 language:
   minimal
 
+branches:
+  except:
+    /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
 install:
   make install
 
@@ -11,13 +15,17 @@ script:
   make build
 
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  target_branch: $(echo releases-$TRAVIS_BRANCH | sed 's/^releases-master$/releases/')
-  local_dir: releases
-  on:
-    all_branches: true
+  - provider: script
+    script: ./.github/release
+    on:
+      branch: master
+    skip_cleanup: true
+  - provider: script
+    script: ./.github/release --prerelease
+    on:
+      all_branches: true
+      condition: $TRAVIS_BRANCH != master
+    skip_cleanup: true
 
 notifications:
   slack:

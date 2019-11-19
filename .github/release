@@ -1,0 +1,87 @@
+#!/usr/bin/env sh
+#
+# Deploy build artifacts as a GitHub release
+# https://github.com/ashenm/environment
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+
+# errexit
+set -e
+
+# repository
+REPOSITORY="ashenm/environment"
+
+# color escapes
+ANSI_RESET="\033[0m"
+ANSI_YELLOW="\033[33;1m"
+
+# verbosity
+STDOUT=/dev/stdout
+
+# parse args
+while [ $# -ne 0 ]
+do
+
+  case "$1" in
+
+    --silent)
+      STDOUT=/dev/null
+      shift
+      ;;
+
+    --prerelease)
+      PRERELEASE="true"
+      shift
+      ;;
+
+    -*|--*)
+      echo >&2 "Invalid option $1"
+      exit 1
+      ;;
+
+  esac
+
+done
+
+# ensure requisite files
+test -f releases/windows/aliases.cab && test -f releases/linux/sbin.tar && \
+  test -f releases/linux/bin.tar || { echo >&2 "Missing requisit file(s)"; exit 1; }
+
+# tag (latest++)
+TAG_NAME="$(curl --silent --fail --location --show-error --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/tags" \
+  | jq --raw-output '.[0]["name"] // "v0" | match("v(\\d+\\.?\\d*?)(\\.\\d*)?$") | .["captures"][0]["string"] | tonumber + .1 | "v" + tostring')"
+
+# strip preceding decimals
+TAG_NAME="$(expr substr $TAG_NAME 1 4)"
+
+echo 1>$STDOUT "${ANSI_YELLOW}Preparing release ${TAG_NAME}${ANSI_RESET}"
+
+# create new lightweight tag
+curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --output /dev/null --url "https://api.github.com/repos/$REPOSITORY/git/tags" \
+  --data "{ \"tag\": \"$TAG_NAME\", \"message\": \"Deploy $TAG_NAME\", \"object\": \"$(git log --max-count=1 --format="%H")\", \"type\": \"commit\" }"
+
+echo 1>$STDOUT "${ANSI_YELLOW}Deploying ${PRERELEASE+pre-}release${ANSI_RESET}"
+
+# create release
+RELEASE_ID="$(curl --fail --silent --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/releases" \
+    --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git log --max-count=1 --format="%H")\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false} }" | jq --raw-output '.id')"
+
+echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact aliases.cab${ANSI_RESET}"
+
+# upload aliases.cab
+curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/vnd.ms-cab-compressed" \
+  --data-binary "@releases/windows/aliases.cab" --output /dev/null --url "https://uploads.github.com/repos/$REPOSITORY/releases/$RELEASE_ID/assets?name=aliases.cab&label=Windows%20Binaries"
+  
+echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact sbin.tar${ANSI_RESET}"
+
+# upload sbin.tar
+curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/x-tar" \
+  --data-binary "@releases/linux/sbin.tar" --output /dev/null --url "https://uploads.github.com/repos/$REPOSITORY/releases/$RELEASE_ID/assets?name=sbin.tar&label=Linux%20System%20Binaries"
+
+echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact bin.tar${ANSI_RESET}"
+
+# upload bin.tar
+curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/x-tar" \
+  --data-binary "@releases/linux/bin.tar" --output /dev/null --url "https://uploads.github.com/repos/$REPOSITORY/releases/$RELEASE_ID/assets?name=bin.tar&label=Linux%20Binaries"
