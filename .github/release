@@ -37,6 +37,11 @@ do
       shift
       ;;
 
+    --tag)
+      TAG_NAME="${2:?Invalid TAG}"
+      shift 2
+      ;;
+
     -*|--*)
       echo >&2 "Invalid option $1"
       exit 1
@@ -51,7 +56,7 @@ test -f releases/windows/aliases.cab && test -f releases/linux/sbin.tar && \
   test -f releases/linux/bin.tar || { echo >&2 "${ANSI_RED}Missing requisit file(s)${ANSI_RESET}"; exit 1; }
 
 # tag (latest++)
-TAG_NAME="$(curl --silent --fail --location --show-error --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/tags" \
+test -z "$TAG_NAME" && TAG_NAME="$(curl --silent --fail --location --show-error --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/tags" \
   | jq --raw-output '.[0]["name"] // "v0" | match("v(\\d+\\.?\\d*?)(\\.\\d*)?$") | .["captures"][0]["string"] | tonumber + .1 | "v" + tostring')"
 
 # strip preceding decimals
