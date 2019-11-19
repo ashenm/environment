@@ -14,8 +14,9 @@ set -e
 REPOSITORY="ashenm/environment"
 
 # color escapes
+ANSI_RED="\033[31m"
 ANSI_RESET="\033[0m"
-ANSI_YELLOW="\033[33;1m"
+ANSI_YELLOW="\033[33m"
 
 # verbosity
 STDOUT=/dev/stdout
@@ -47,7 +48,7 @@ done
 
 # ensure requisite files
 test -f releases/windows/aliases.cab && test -f releases/linux/sbin.tar && \
-  test -f releases/linux/bin.tar || { echo >&2 "Missing requisit file(s)"; exit 1; }
+  test -f releases/linux/bin.tar || { echo >&2 "${ANSI_RED}Missing requisit file(s)${ANSI_RESET}"; exit 1; }
 
 # tag (latest++)
 TAG_NAME="$(curl --silent --fail --location --show-error --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/tags" \
