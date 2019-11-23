@@ -28,6 +28,7 @@ Options:
       --hostname string     Container hostname
       --image               Custom container image (default 'ashenm/workspace')
   -n, --name                Assign a name to the container
+      --no-agent            Avoid ssh-agent socket sharing
       --no-git              Avoid ~/.gitconfig read-only bind mount
       --no-gpg              Avoid ~/.gnupg bind mount
       --no-host             Avoid population of host IP mapping
@@ -71,6 +72,11 @@ while [ "$#" -ne 0 ]
 do
 
   case "$1" in
+
+    --no-agent)
+      SSH_AUTH_SOCK=
+      shift
+      ;;
 
     --no-mount)
       DIRECTORY=
@@ -163,6 +169,10 @@ test -n "$CONTAINER" && \
 # container hostname
 test -n "$DNSNAME" && \
   ARGUMENTS="$ARGUMENTS --hostname $DNSNAME"
+
+# share ssh-agent socket if running
+test -n "$SSH_AUTH_SOCK" && \
+  ARGUMENTS="$ARGUMENTS --volume $SSH_AUTH_SOCK:/run/keyring/ssh:ro"
 
 # directory mount
 test -n "$DIRECTORY" && \
