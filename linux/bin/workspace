@@ -189,4 +189,4 @@ test "$GNUPGDIR" != "false" && test -d "$HOME/.gnupg" && \
   ARGUMENTS="$ARGUMENTS --volume $HOME/.gnupg:/home/ubuntu/.gnupg"
 
 # spawn new container
-exec docker run $ARGUMENTS $IMAGE bash --login
+exec docker run $ARGUMENTS $IMAGE
