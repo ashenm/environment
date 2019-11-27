@@ -64,6 +64,9 @@ purge: ## remove upstream components
 		rm --recursive --force "$$(dirname --zero $$path)"; \
 	done < components.csv
 
+	# remove generated metadata
+	rm --force AUTHORS VERSION
+
 	# purge all empty directories
 	find . -type d -empty -delete
 
