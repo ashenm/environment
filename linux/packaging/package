@@ -1,0 +1,137 @@
+#!/usr/bin/env sh
+#
+# Build Environment Debian Package(s)
+# https://github.com/ashenm/environment
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+
+# errexit
+set -e
+
+#######################################
+# Print usage instructions to STDIN
+# Arguments:
+#   None
+# Returns:
+#   None
+#######################################
+usage() {
+
+cat <<USAGE
+Usage: $SELF OPTIONS [VERSION]
+Options:
+   --distribution        Package distribution (required)
+   --epoch               Package version epoch
+   --upstream            Package main version
+   --urgency             Package importance level
+
+USAGE
+
+}
+
+#######################################
+# Print invalid argument details to STDERR
+# Arguments:
+#   Invalid argument
+# Returns:
+#   None
+#######################################
+invalid() {
+
+cat >&2 <<INVALID
+$SELF: unrecognized option '$1'
+Try '$SELF --help' for more information.
+INVALID
+
+}
+
+# script reference
+SELF="`basename $0`"
+
+# parse arguments
+while [ $# -ne 0 ]
+do
+
+  case "$1" in
+
+    --help)
+      usage
+      exit
+      ;;
+
+    --epoch)
+      EPOCH="${2:?Invalid EPOCH}"
+      shift 2
+      ;;
+
+    --distribution)
+      DISTRIBUTION="${2:?Invalid DISTRIBUTION}"
+      shift 2
+      ;;
+
+    --urgency)
+      URGENCY="${2:?Invalid URGANCY}"
+      shift 2
+      ;;
+
+    -*|--*)
+      invalid "$1"
+      exit 1
+      ;;
+
+    *)
+      VERSION="$1"
+      shift
+      ;;
+
+  esac
+
+done
+
+# extract distname and codename
+DISTRO="${DISTRIBUTION%%-*}"
+CODENAME="${DISTRIBUTION##*-}"
+
+# ensure distribution
+test -z "$DISTRIBUTION" && {
+  echo >&2 "$SELF: Invalid DISTRIBUTION"
+  echo >&2 "Try '$SELF --help' for more information."
+  exit 1
+}
+
+# assume debian only codename
+test "$DISTRIBUTION" = "$CODENAME" && {
+  CODENAME=$DISTRO; DISTRO=
+}
+
+# extract common package metadata
+PACKAGE="$(awk -F ': ' '$1 == "Source" { print $2; exit }' common/control)"
+MAINTAINER="$(awk -F ': ' '$1 == "Maintainer" { print $2; exit }' common/control)"
+
+# distribution specific output directory
+ADOBE="${DISTRO:-debian}-${CODENAME}"
+
+# prepaire package abode
+mkdir --parent "$ADOBE"
+cp --recursive --force "common" "${ADOBE}/debian"
+
+# create changelog
+# deliberately avoiding debchange
+cat > "${ADOBE}/debian/changelog" <<CHANGELOG
+$PACKAGE (${EPOCH}${EPOCH:+:}${VERSION:=1.0}-${DISTRO:+0}${DISTRO:-1}${DISTRO:+-1}) $CODENAME; urgency=${URGENCY:-low}
+  * Build: $(git log --max-count=1 --format="%H")
+ -- $MAINTAINER  $(LC_ALL=C date --rfc-2822)
+CHANGELOG
+
+# ensure expected upstream .org.tar.gz
+cp --force source.tgz "${PACKAGE}_${VERSION}${DISTRO:+-0}${DISTRO}.orig.tar.gz"
+
+# extract source
+tar --extract --file source.tgz --directory $ADOBE --strip-components 1
+
+# build package
+( cd $ADOBE; dpkg-buildpackage -uc -us; )
+
+# vim: set expandtab shiftwidth=2 syntax=sh:

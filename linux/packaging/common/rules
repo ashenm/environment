@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+UPSTREAM:=$(realpath $CURDIR/../components)
+
+override_dh_auto_install:
+	dh_auto_install -- PREFIX=
+
+%:
+	dh $@
