@@ -120,13 +120,13 @@ cp --recursive --force "common" "${ADOBE}/debian"
 # create changelog
 # deliberately avoiding debchange
 cat > "${ADOBE}/debian/changelog" <<CHANGELOG
-$PACKAGE (${EPOCH}${EPOCH:+:}${VERSION:=1.0}-${DISTRO:+0}${DISTRO:-1}${DISTRO:+-1}) $CODENAME; urgency=${URGENCY:-low}
+$PACKAGE (${EPOCH}${EPOCH:+:}${VERSION:=1.0}-${DISTRO:+0}${DISTRO:-1}${DISTRO:+1}) $CODENAME; urgency=${URGENCY:-low}
   * Build: $(git log --max-count=1 --format="%H")
  -- $MAINTAINER  $(LC_ALL=C date --rfc-2822)
 CHANGELOG
 
 # ensure expected upstream .org.tar.gz
-cp --force source.tgz "${PACKAGE}_${VERSION}${DISTRO:+-0}${DISTRO}.orig.tar.gz"
+cp --force source.tgz "${PACKAGE}_${VERSION}.orig.tar.gz"
 
 # extract source
 tar --extract --file source.tgz --directory $ADOBE --strip-components 1
