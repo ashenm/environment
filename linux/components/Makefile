@@ -6,7 +6,7 @@ help: ## list make targets
 	@awk 'BEGIN { FS = ":.*?## " } /^[a-zA-Z_-]+:.*?## / { sub("\\\\n", sprintf("\n%22c", " "), $$2); printf " %-20s  %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
 .PHONY: install
-install: update ## install upstream
+install: ## install upstream
 
 	# {bin,sbin}
 	install -Dm 755 --target-directory $(DESTDIR)$(patsubst ,/usr,$(PREFIX))/bin bin/*
