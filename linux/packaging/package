@@ -132,6 +132,6 @@ cp --force source.tgz "${PACKAGE}_${VERSION}.orig.tar.gz"
 tar --extract --file source.tgz --directory $ADOBE --strip-components 1
 
 # build package
-( cd $ADOBE; dpkg-buildpackage -uc -us --build=source; )
+( cd $ADOBE; dpkg-buildpackage --unsigned-changes --unsigned-source --build=source; )
 
 # vim: set expandtab shiftwidth=2 syntax=sh:
