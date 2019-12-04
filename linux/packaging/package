@@ -127,7 +127,7 @@ test -z "$VERSION" && test -f "${ADOBE}/VERSION" && \
 # create changelog
 # deliberately avoiding debchange
 cat > "${ADOBE}/debian/changelog" <<CHANGELOG
-$PACKAGE (${EPOCH}${EPOCH:+:}${VERSION:=1.0}-${DISTRO:+0}${DISTRO:-1}${DISTRO:+1}) $CODENAME; urgency=${URGENCY:-low}
+$PACKAGE (${EPOCH}${EPOCH:+:}${VERSION:=1.0}-${DISTRO:+0}${DISTRO:-1}${DISTRO:+1}~${CODENAME}) $CODENAME; urgency=${URGENCY:-low}
   * Build: $(git log --max-count=1 --format="%H")
  -- $MAINTAINER  $(LC_ALL=C date --rfc-2822)
 CHANGELOG
