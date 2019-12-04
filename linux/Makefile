@@ -1,8 +1,8 @@
 help: ## list make targets
 	@awk 'BEGIN { FS = ":.*?## " } /^[a-zA-Z_-]+:.*?## / { sub("\\\\n", sprintf("\n%22c", " "), $$2); printf " %-20s  %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
-deb: ## build deb packages
-	$(MAKE) --directory packaging deb
+deb: ## build ubuntu packages
+	$(MAKE) --directory packaging ubuntu
 
 archive: ## build upstream archive
 	$(MAKE) --directory components archive
