@@ -4,6 +4,7 @@ DISTROS:=$(DEBIAN_VERSIONS) $(UBUNTU_VERSIONS)
 
 PACKAGE:=$(shell awk -F ': ' '$$1 == "Source" { print $$2; exit }' common/control)
 VERSION:=$(if $(wildcard source.tgz),$(shell tar -xOf source.tgz $(PACKAGE)/VERSION),)
+REVISION:=1
 
 UPSTREAM:=$(realpath $(CURDIR)/../components)
 
@@ -27,7 +28,7 @@ deb: ubuntu debian ## build all deb packages
 
 .PHONY: $(DISTROS)
 $(DISTROS): source.tgz
-	$(CURDIR)/package --distribution $(@:debian-%=%) $(VERSION)
+	$(CURDIR)/package --distribution $(@:debian-%=%) --revision $(REVISION) $(VERSION)
 
 source.tgz:
 	$(MAKE) --directory $(UPSTREAM) archive ARCHIVE=$(CURDIR)/source.tgz
