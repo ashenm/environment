@@ -14,7 +14,7 @@ help: ## list make targets
 .PHONY: clean
 clean: ## remove build artifacts
 	find . -mindepth 1 -maxdepth 1 -type d \! -name 'common' -exec rm -rf {} \;
-	rm --recursive --force source.tgz $(PACKAGE)_*
+	rm --recursive --force $(PACKAGE)_*
 
 .PHONY: ubuntu
 ubuntu: $(UBUNTU_VERSIONS) ## build all ubuntu deb packages
