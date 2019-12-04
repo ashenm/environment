@@ -1,0 +1,53 @@
+#!/usr/bin/env sh
+#
+# Publish Environment Debian Package(s)
+# https://github.com/ashenm/environment
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+
+# errexit
+set -e
+
+# parse args
+while [ $# -ne 0 ]
+do
+
+  case "$1" in
+
+    --archive)
+      PACKAGE_ARCHIVE=${2:?Invalid ARCHIVE}
+      shift 2
+      ;;
+
+    --signature)
+      SIGNATURE_REFERENCE=${2:?Invalid SIGNATURE}
+      shift 2
+      ;;
+
+    -*|--*)
+      shift
+      ;;
+
+    *)
+      shift
+      ;;
+
+  esac
+
+done
+
+test -z "$SIGNATURE_REFERENCE" && {
+  echo >&2 'Missing required option SIGNATURE'; exit 1; }
+
+# extract package metadata
+PACKAGE="$(awk -F ': ' '$1 == "Source" { print $2; exit }' common/control)"
+
+# sign package(s)
+debsign -k "${SIGNATURE_REFERENCE}" ${PACKAGE}_*.changes
+
+# publish package(s)
+dput ${PACKAGE_ARCHIVE:-ppa:ashenm/ppa} ${PACKAGE}_*.changes
+
+# vim: set expandtab shiftwidth=2 syntax=sh:
