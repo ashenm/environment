@@ -3,7 +3,7 @@ UBUNTU_VERSIONS:=ubuntu-bionic ubuntu-disco ubuntu-eoan
 DISTROS:=$(DEBIAN_VERSIONS) $(UBUNTU_VERSIONS)
 
 PACKAGE:=$(shell awk -F ': ' '$$1 == "Source" { print $$2; exit }' common/control)
-VERSION:=$(if $(wildcard source.tgz),$(shell tar -xOf source.tgz $(PACKAGE)/VERSION),)
+VERSION:=$(if $(wildcard source.txz),$(shell tar -xJOf source.txz $(PACKAGE)/VERSION),)
 REVISION:=1
 
 UPSTREAM:=$(realpath $(CURDIR)/../components)
@@ -27,8 +27,8 @@ debian: $(DEBIAN_VERSIONS) ## build all debian deb packages
 deb: ubuntu debian ## build all deb packages
 
 .PHONY: $(DISTROS)
-$(DISTROS): source.tgz
+$(DISTROS): source.txz
 	$(CURDIR)/package --distribution $(@:debian-%=%) --revision $(REVISION) $(VERSION)
 
-source.tgz:
-	$(MAKE) --directory $(UPSTREAM) archive ARCHIVE=$(CURDIR)/source.tgz
+source.txz:
+	$(MAKE) --directory $(UPSTREAM) archive ARCHIVE=$(CURDIR)/source.txz

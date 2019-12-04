@@ -71,4 +71,4 @@ purge: ## remove upstream components
 	find . -type d -empty -delete
 
 archive: update version authors ## build upstream archive
-	tar --create --gzip --file $(if $(ARCHIVE),$(ARCHIVE),../$(PACKAGE)-$$(cat VERSION).tgz) --transform 's/^\./$(PACKAGE)/' .
+	tar --create --xz --file $(if $(ARCHIVE),$(ARCHIVE),../$(PACKAGE)-$$(cat VERSION).txz) --transform 's/^\./$(PACKAGE)/' .
