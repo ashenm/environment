@@ -1,5 +1,5 @@
 DEBIAN_VERSIONS:=debian-stretch debian-buster
-UBUNTU_VERSIONS:=ubuntu-bionic ubuntu-cosmic ubuntu-disco
+UBUNTU_VERSIONS:=ubuntu-bionic ubuntu-disco
 DISTROS:=$(DEBIAN_VERSIONS) $(UBUNTU_VERSIONS)
 
 PACKAGE:=$(shell awk -F ': ' '$$1 == "Source" { print $$2; exit }' common/control)
