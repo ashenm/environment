@@ -117,6 +117,13 @@ ADOBE="${DISTRO:-debian}-${CODENAME}"
 mkdir --parent "$ADOBE"
 cp --recursive --force "common" "${ADOBE}/debian"
 
+# extract source
+tar --extract --file source.tgz --directory $ADOBE --strip-components 1
+
+# use upstream version unless specified
+test -z "$VERSION" && test -f "${ADOBE}/VERSION" && \
+  VERSION=$(cat ${ADOBE}/VERSION)
+
 # create changelog
 # deliberately avoiding debchange
 cat > "${ADOBE}/debian/changelog" <<CHANGELOG
@@ -127,9 +134,6 @@ CHANGELOG
 
 # ensure expected upstream .org.tar.gz
 cp --force source.tgz "${PACKAGE}_${VERSION}.orig.tar.gz"
-
-# extract source
-tar --extract --file source.tgz --directory $ADOBE --strip-components 1
 
 # build package
 ( cd $ADOBE; dpkg-buildpackage --unsigned-changes --unsigned-source --build=source; )
