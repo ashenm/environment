@@ -10,6 +10,9 @@
 # errexit
 set -e
 
+# script reference
+SELF="$(basename $0)"
+
 # parse args
 while [ $# -ne 0 ]
 do
@@ -27,11 +30,13 @@ do
       ;;
 
     -*|--*)
-      shift
+      echo >&2 "${SELF}: Invalid option $1"
+      exit 1
       ;;
 
     *)
-      shift
+      echo >&2 "${SELF}: Invalid parameter $1"
+      exit 1
       ;;
 
   esac

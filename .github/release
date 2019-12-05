@@ -21,6 +21,9 @@ ANSI_YELLOW="\033[33m"
 # verbosity
 STDOUT=/dev/stdout
 
+# script reference
+SELF="$(basename $0)"
+
 # parse args
 while [ $# -ne 0 ]
 do
@@ -43,7 +46,12 @@ do
       ;;
 
     -*|--*)
-      echo >&2 "Invalid option $1"
+      echo >&2 "${SELF}: Invalid option $1"
+      exit 1
+      ;;
+
+    *)
+      echo >&2 "${SELF}: Invalid parameter $1"
       exit 1
       ;;
 
