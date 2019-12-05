@@ -32,7 +32,7 @@ deb: ubuntu debian ## build all deb packages
 
 .PHONY: $(DISTROS)
 $(DISTROS): source.txz
-	$(CURDIR)/package $(PACKAGE_BINARY:true=--binary) --distribution $(@:debian-%=%) --revision $(REVISION) $(VERSION)
+	$(CURDIR)/package $(PACKAGE_BINARY:%=--binary) --distribution $(@:debian-%=%) --revision $(REVISION) $(VERSION)
 
 source.txz:
 	$(MAKE) --directory $(UPSTREAM) archive ARCHIVE=$(CURDIR)/source.txz
