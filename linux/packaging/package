@@ -148,4 +148,7 @@ cp --force source.txz "${PACKAGE}_${VERSION}.orig.tar.xz"
 # build package
 ( cd $ADOBE; dpkg-buildpackage --unsigned-changes --unsigned-source --build=source${PACKAGE_BIN:+,all}; )
 
+test -z "$PACKAGE_BIN" || echo "$DISTRO $CODENAME" | awk '{ print toupper(substr($1, 1, 1)) substr($1, 2), toupper(substr($2, 1, 1)) substr($2, 2) }' \
+  > "${PACKAGE}_${EPOCH}${EPOCH:+:}${VERSION:=1.0}-${DISTRO:+0}${DISTRO:-${REVISION:-1}}${DISTRO:+${REVISION:-1}}~${CODENAME}_all.ttl"
+
 # vim: set expandtab shiftwidth=2 syntax=sh:
