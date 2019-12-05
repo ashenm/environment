@@ -81,6 +81,11 @@ do
       shift 2
       ;;
 
+    --binary)
+      PACKAGE_BIN=true
+      shift
+      ;;
+
     -*|--*)
       invalid "$1"
       exit 1
@@ -141,6 +146,6 @@ CHANGELOG
 cp --force source.txz "${PACKAGE}_${VERSION}.orig.tar.xz"
 
 # build package
-( cd $ADOBE; dpkg-buildpackage --unsigned-changes --unsigned-source --build=source; )
+( cd $ADOBE; dpkg-buildpackage --unsigned-changes --unsigned-source --build=source${PACKAGE_BIN:+,all}; )
 
 # vim: set expandtab shiftwidth=2 syntax=sh:
