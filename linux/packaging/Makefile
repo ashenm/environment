@@ -12,6 +12,10 @@ UPSTREAM:=$(realpath $(CURDIR)/../components)
 help: ## list make targets
 	@awk 'BEGIN { FS = ":.*?## " } /^[a-zA-Z_-]+:.*?## / { sub("\\\\n", sprintf("\n%22c", " "), $$2); printf " %-20s  %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
+.PHONY: install
+install: ## configure build environment
+	mk-build-deps --install --build-dep --root-cmd sudo common/control
+
 .PHONY: clean
 clean: ## remove build artifacts
 	find . -mindepth 1 -maxdepth 1 -type d \! -name 'common' -exec rm -rf {} \;
