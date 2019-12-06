@@ -10,8 +10,9 @@
 # errexit
 set -e
 
-# script reference
+# script references
 SELF="$(basename $0)"
+PREFIX="$(dirname $0)"
 
 # parse args
 while [ $# -ne 0 ]
@@ -26,6 +27,11 @@ do
 
     --signature)
       SIGNATURE_REFERENCE=${2:?Invalid SIGNATURE}
+      shift 2
+      ;;
+
+    --directory)
+      PREFIX="${2:?Invalid DIRECTORY}"
       shift 2
       ;;
 
@@ -47,12 +53,12 @@ test -z "$SIGNATURE_REFERENCE" && {
   echo >&2 'Missing required option SIGNATURE'; exit 1; }
 
 # extract package metadata
-PACKAGE="$(awk -F ': ' '$1 == "Source" { print $2; exit }' common/control)"
+PACKAGE="$(awk -F ': ' '$1 == "Source" { print $2; exit }' ${PREFIX}/common/control)"
 
 # sign package(s)
-debsign -k "${SIGNATURE_REFERENCE}" ${PACKAGE}_*.changes
+debsign -k "${SIGNATURE_REFERENCE}" ${PREFIX}/${PACKAGE}_*.changes
 
 # publish package(s)
-dput ${PACKAGE_ARCHIVE:-ppa:ashenm/ppa} ${PACKAGE}_*.changes
+dput ${PACKAGE_ARCHIVE:-ppa:ashenm/ppa} ${PREFIX}/${PACKAGE}_*.changes
 
 # vim: set expandtab shiftwidth=2 syntax=sh:
