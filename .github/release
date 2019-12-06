@@ -10,6 +10,23 @@
 # errexit
 set -e
 
+#######################################
+# Upload artefacts to GitHub Releases
+# Arguments:
+#   Filename, MIME type, Description
+# Returns:
+#   None
+#######################################
+upload() {
+
+  test -f "$1" ||  {
+    echo >&2 "${ANSI_RED}${SELF}: Invalid file reference $1${ANSI_RESET}"; exit 1; }
+
+  curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --header "Content-Type: $2" \
+    --data-binary "@$1" --output /dev/null --url "https://uploads.github.com/repos/$REPOSITORY/releases/$RELEASE_ID/assets?name=$(basename $1)&label=$3"
+
+}
+
 # repository
 REPOSITORY="ashenm/environment"
 
@@ -82,7 +99,6 @@ RELEASE_ID="$(curl --fail --silent --show-error --request POST --header "Authori
 echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact aliases.cab${ANSI_RESET}"
 
 # upload aliases.cab
-curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/vnd.ms-cab-compressed" \
-  --data-binary "@releases/windows/aliases.cab" --output /dev/null --url "https://uploads.github.com/repos/$REPOSITORY/releases/$RELEASE_ID/assets?name=aliases.cab&label=Windows%20Binaries"
+upload "releases/windows/aliases.cab" "application/vnd.ms-cab-compressed" "Windows%20Binaries"
 
 # vim: set expandtab shiftwidth=2 syntax=sh:
