@@ -1,1 +1,3 @@
+- [ ] Build debian binary packages
+- [ ] Deploy debian binary packages to GitHub Releases
 - [ ] Implement debian source build tests
