@@ -103,7 +103,13 @@ upload "windows/aliases.cab" "application/vnd.ms-cab-compressed" "Windows%20Bina
 
 # upload debian packages
 for PACKAGE in linux/packaging/*.deb; do
+
+  # ignore source-only builds
+  test -f "$PACKAGE" || continue
+
+  # upload package to GitHub Releases
   upload $PACKAGE "application/vnd.debian.binary-package" "Debian%20Package%20($(cat ${PACKAGE%.deb}.ttl | sed 's/\s/\%20/g'))"
+
 done
 
 # vim: set expandtab shiftwidth=2 syntax=sh:
