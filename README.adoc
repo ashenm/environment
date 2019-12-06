@@ -9,7 +9,7 @@
 ====== Customise Linux/Windows Operating Environment
 image:https://travis-ci.com/ashenm/environment.svg?branch=master["Build Status", link="https://travis-ci.com/ashenm/environment"]
 
-=== Linux
+=== Debian/Ubuntu
 [source, shell]
 ----
 sudo add-apt-repository --yes ppa:ashenm/ppa \
