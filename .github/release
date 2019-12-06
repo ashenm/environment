@@ -99,7 +99,7 @@ RELEASE_ID="$(curl --fail --silent --show-error --request POST --header "Authori
 echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact aliases.cab${ANSI_RESET}"
 
 # upload aliases.cab
-upload "releases/windows/aliases.cab" "application/vnd.ms-cab-compressed" "Windows%20Binaries"
+upload "windows/aliases.cab" "application/vnd.ms-cab-compressed" "Windows%20Binaries"
 
 # upload debian packages
 for PACKAGE in linux/packaging/*.deb; do
