@@ -1,31 +1,48 @@
-build :
+.PHONY: build
+build:
 	$(MAKE) linux
 	$(MAKE) windows
 
-clean :
-	rm --force --recursive releases
+.PHONY: clean
+clean:
+	$(MAKE) --directory linux clean
+	$(MAKE) --directory windows clean
 
-linux : linux/bin linux/sbin releases/linux
-	tar --create --file releases/linux/bin.tar --mode 0755 --owner root --group root --strip-components 1 --transform 's|linux|usr/local|' linux/bin
-	tar --create --file releases/linux/sbin.tar --mode 0755 --owner root --group root --strip-components 1 --transform 's|linux|usr/local|' linux/sbin
+.PHONY: purge
+purge: clean
+	$(MAKE) --directory linux purge
+	$(MAKE) --directory windows purge
 
-windows : windows/aliases releases/windows
-	lcab -nr windows/aliases releases/windows/aliases.cab
+.PHONY: install
+install:
+	sudo apt update && \
+		sudo apt install --yes devscripts equivs lcab
+	$(MAKE) --directory linux/packaging install
 
-install :
-	sudo apt-get update && sudo apt-get install -y lcab
+.PHONY: linux
+linux: linux/components
+	$(MAKE) --directory linux/packaging ubuntu
 
-releases/windows :
-	mkdir --parent releases/windows
+.PHONY: linux/components
+linux/components:
+	$(MAKE) --directory linux/components archive ARCHIVE=/dev/null
 
-windows/aliases :
-	mkdir --parent windows/aliases
+.PHONY: linux/binaries
+linux/binaries:
+	$(MAKE) --directory linux/packaging ubuntu PACKAGE_BINARY=true
 
-releases/linux :
-	mkdir --parent releases/linux
+.PHONY: windows
+windows:
+	$(MAKE) --directory windows shims
 
-linux/sbin :
-	mkdir --parent linux/sbin
+.PHONY: version
+version:
+	@git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 }'
 
-linux/bin :
-	mkdir --parent linux/bin
+.PHONY: version++
+version++:
+	@git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 + 0.1 }'
+
+.PHONY: release
+release:
+	git tag --force $${SIGNATURE_REFERENCE:+--sign} $${SIGNATURE_REFERENCE:+--user=}$${SIGNATURE_REFERENCE} $(shell make version++)

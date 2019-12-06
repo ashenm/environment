@@ -1,30 +1,41 @@
 dist:
-  xenial
+  bionic
 
 language:
   minimal
+
+git:
+  depth: false
 
 branches:
   except:
     /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
+before_install:
+  openssl aes-256-cbc -K $encrypted_1af65ac72a6a_key -iv $encrypted_1af65ac72a6a_iv -in launchpad.asc.enc -out launchpad.asc -d
+
 install:
   make install
+
+before_script:
+  make release
 
 script:
   make build
 
+after_success:
+  make linux/binaries
+
 deploy:
   - provider: script
-    script: ./.github/release
+    script: ./linux/packaging/publish
     on:
       branch: master
     skip_cleanup: true
   - provider: script
-    script: ./.github/release --prerelease
+    script: ./.github/release --tag $(make version)
     on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH != master
+      branch: master
     skip_cleanup: true
 
 notifications:

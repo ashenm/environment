@@ -1,0 +1,6 @@
+etc/profile.d/baseimage.sh,https://raw.githubusercontent.com/ashenm/baseimage/latest/etc/profile.d/baseimage.sh
+etc/profile.d/workspace.sh,https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/profile.d/workspace.sh
+usr/share/vim/vimrc,https://raw.githubusercontent.com/amix/vimrc/master/vimrcs/basic.vim
+etc/ssh/workspace,https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/ssh/workspace
+etc/gitconfig,https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/gitconfig
+etc/gitattributes,https://raw.githubusercontent.com/ashenm/workspace/latest/filesystem/etc/gitattributes

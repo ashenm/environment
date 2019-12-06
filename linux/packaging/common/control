@@ -1,0 +1,20 @@
+Source: environment
+Section: misc
+Priority: optional
+Maintainer: Ashen Gunaratne <mail@ashenm.ml>
+Build-Depends: curl (>= 1~),
+               grep (>= 1~),
+               make (>= 1~),
+               debhelper (>= 10~),
+               git
+Standards-Version: 3.9.2
+Homepage: https://github.com/ashenm/environment
+Vcs-Browser: https://github.com/ashenm/environment
+Vcs-Git: git://github.com/ashenm/environment.git
+
+Package: environment
+Architecture: all
+Depends: ${misc:Depends}
+Description: A Collection of Conffiles and Shims
+ The package contains a collection of configuration overrides
+ and shims that evenly customises indented linux environments

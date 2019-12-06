@@ -9,10 +9,11 @@
 ====== Customise Linux/Windows Operating Environment
 image:https://travis-ci.com/ashenm/environment.svg?branch=master["Build Status", link="https://travis-ci.com/ashenm/environment"]
 
-=== Linux
+=== Debian/Ubuntu
 [source, shell]
 ----
-curl -sSL https://raw.githubusercontent.com/ashenm/environment/master/linux/setup | sudo sh -
+sudo add-apt-repository --yes ppa:ashenm/ppa \
+  && sudo apt-get -o Dpkg::Options::="--force-overwrite" install environment
 ----
 
 === Windows
