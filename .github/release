@@ -81,7 +81,7 @@ test -z "$TAG_NAME" && {
   echo >&2 "${ANSI_RED}${SELF}: Missing required parameter TAG${ANSI_RESET}"; exit 1; }
 
 # ensure requisite files
-test -f releases/windows/aliases.cab || {
+test -f windows/aliases.cab || {
   echo >&2 "${ANSI_RED}Missing requisit file(s)${ANSI_RESET}"; exit 1; }
 
 echo 1>$STDOUT "${ANSI_YELLOW}Preparing release ${TAG_NAME}${ANSI_RESET}"
