@@ -5,7 +5,13 @@ build:
 
 .PHONY: clean
 clean:
-	rm --force --recursive releases
+	$(MAKE) --directory linux clean
+	$(MAKE) --directory windows clean
+
+.PHONY: purge
+purge: clean
+	$(MAKE) --directory linux purge
+	$(MAKE) --directory windows purge
 
 .PHONY: install
 install:
@@ -26,12 +32,8 @@ linux/binaries:
 	$(MAKE) --directory linux/packaging ubuntu PACKAGE_BINARY=true
 
 .PHONY: windows
-windows: windows/aliases
-	lcab -nr windows/aliases windows/aliases.cab
-
-.PHONY: windows/aliases
-windows/aliases:
-	mkdir --parent windows/aliases
+windows:
+	$(MAKE) --directory windows shims
 
 .PHONY: version
 version:

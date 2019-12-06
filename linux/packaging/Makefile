@@ -36,3 +36,6 @@ $(DISTROS): source.txz
 
 source.txz:
 	$(MAKE) --directory $(UPSTREAM) archive ARCHIVE=$(CURDIR)/source.txz
+
+purge: clean
+	rm --force $(wildcard *.txz *.deb)
