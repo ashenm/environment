@@ -12,7 +12,7 @@ test -z "$encrypted_1af65ac72a6a_key" || \
   openssl aes-256-cbc -K "$encrypted_1af65ac72a6a_key" -iv "$encrypted_1af65ac72a6a_iv" -in launchpad.asc.enc -out launchpad.asc -d
 
 # install gnupg2
-sudo apt update && \
+#sudo apt update && \
   sudo apt install --yes gnupg2
 
 # enable internal cache seeding
@@ -28,6 +28,10 @@ echo "${SIGNATURE_PASSPHRASE}" | gpg2 --batch --import --passphrase-fd 0 launchp
 # cache key passphrase
 echo "$SIGNATURE_PASSPHRASE" | /usr/lib/gnupg2/gpg-preset-passphrase --verbose \
   --preset "$(gpg2 --with-keygrip --list-secret-keys $SIGNATURE_REFERENCE | awk -F'= ' '/ +Keygrip/ { print $2; exit }')"
+
+# make imported key default
+echo "default-key $(gpg --list-keys --keyid-format 0xlong $SIGNATURE_REFERENCE | \
+  awk '/^pub/ { sub(/^.+\//, "", $2); print $2; exit }')" | tee --append $HOME/.gnupg/gpg.conf
 
 # ultimate trust imported key
 gpg --edit-key --command-fd 0 $SIGNATURE_REFERENCE trust <<EOF
