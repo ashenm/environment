@@ -12,7 +12,7 @@ branches:
     /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 before_install:
-  openssl aes-256-cbc -K $encrypted_1af65ac72a6a_key -iv $encrypted_1af65ac72a6a_iv -in launchpad.asc.enc -out launchpad.asc -d
+  ./.travis/before_install
 
 install:
   make install

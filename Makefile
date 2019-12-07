@@ -16,7 +16,7 @@ purge: clean
 .PHONY: install
 install:
 	sudo apt update && \
-		sudo apt install --yes devscripts equivs lcab
+		sudo apt install --yes dput equivs lcab ubuntu-dev-tools
 	$(MAKE) --directory linux/packaging install
 
 .PHONY: linux
@@ -45,4 +45,4 @@ version++:
 
 .PHONY: release
 release:
-	git tag --force $${SIGNATURE_REFERENCE:+--sign} $${SIGNATURE_REFERENCE:+--user=}$${SIGNATURE_REFERENCE} $(shell make version++)
+	git tag --force $${SIGNATURE_REFERENCE:+--sign} $${SIGNATURE_REFERENCE:+--local-user=}$${SIGNATURE_REFERENCE} --message '' $(shell make version++)

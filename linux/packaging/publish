@@ -59,6 +59,6 @@ PACKAGE="$(awk -F ': ' '$1 == "Source" { print $2; exit }' ${PREFIX}/common/cont
 debsign -k "${SIGNATURE_REFERENCE}" ${PREFIX}/${PACKAGE}_*.changes
 
 # publish package(s)
-dput ${PACKAGE_ARCHIVE:-ppa:ashenm/ppa} ${PREFIX}/${PACKAGE}_*.changes
+dput ${PACKAGE_ARCHIVE:-upstream} ${PREFIX}/${PACKAGE}_*.changes
 
 # vim: set expandtab shiftwidth=2 syntax=sh:

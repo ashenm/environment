@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+
+# errexit
+set -e
+
+# ensure requisites
+test -n "$SIGNATURE_PASSPHRASE" && test -n "$SIGNATURE_REFERENCE" || {
+  echo >&2 "Missing required parameter(s)"; exit 1; }
+
+# decrypt armour
+test -z "$encrypted_1af65ac72a6a_key" || \
+  openssl aes-256-cbc -K "$encrypted_1af65ac72a6a_key" -iv "$encrypted_1af65ac72a6a_iv" -in launchpad.asc.enc -out launchpad.asc -d
+
+# install gnupg2
+sudo apt update && \
+  sudo apt install --yes gnupg2
+
+# enable internal cache seeding
+mkdir --parent "$HOME/.gnupg" && \
+  echo "allow-preset-passphrase" | tee --append "$HOME/.gnupg/gpg-agent.conf"
+
+# reload gpg-agent
+gpg-connect-agent reloadagent /bye
+
+# import private key
+echo "${SIGNATURE_PASSPHRASE}" | gpg2 --batch --import --passphrase-fd 0 launchpad.asc
+
+# cache key passphrase
+echo "$SIGNATURE_PASSPHRASE" | /usr/lib/gnupg2/gpg-preset-passphrase --verbose \
+  --preset "$(gpg2 --with-keygrip --list-secret-keys $SIGNATURE_REFERENCE | awk -F'= ' '/ +Keygrip/ { print $2; exit }')"
+
+# assess success
+echo "assessment" | gpg2 --yes --batch --encrypt --always-trust \
+  --recipient "$SIGNATURE_REFERENCE" --output /dev/null
+
+# default gnupg2
+git config gpg.program gpg2
+
+# configure dput
+cat 1> $HOME/.dput.cf <<EOF
+[upstream]
+fqdn = ppa.launchpad.net
+method = ftp
+incoming = ~ashenm/ubuntu/ppa/
+login = anonymous
+allow_unsigned_uploads = 0
+EOF
+
+# vim: set expandtab shiftwidth=2 syntax=sh:
