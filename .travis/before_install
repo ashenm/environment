@@ -29,9 +29,18 @@ echo "${SIGNATURE_PASSPHRASE}" | gpg2 --batch --import --passphrase-fd 0 launchp
 echo "$SIGNATURE_PASSPHRASE" | /usr/lib/gnupg2/gpg-preset-passphrase --verbose \
   --preset "$(gpg2 --with-keygrip --list-secret-keys $SIGNATURE_REFERENCE | awk -F'= ' '/ +Keygrip/ { print $2; exit }')"
 
+# ultimate trust imported key
+gpg --edit-key --command-fd 0 $SIGNATURE_REFERENCE trust <<EOF
+5
+y
+EOF
+
 # assess success
 echo "assessment" | gpg2 --yes --batch --encrypt --always-trust \
   --recipient "$SIGNATURE_REFERENCE" --output /dev/null
+
+# output for debugging
+gpg --list-public-keys | grep --color=never uid
 
 # default gnupg2
 git config gpg.program gpg2
