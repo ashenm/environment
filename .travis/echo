@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+cat -
+
+# vim: set expandtab shiftwidth=2 syntax=sh:

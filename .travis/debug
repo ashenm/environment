@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+#
+# Restart travis job in debug mode
+# https://github.com/ashenm/environment
+#
+# Ashen Gunaratne
+# mail@ashenm.ml
+#
+#
+
+# errexit
+set -e
+
+# use latest unless specified
+test -z "$1" && {
+
+  # tempfile
+  TRAVIS_BUILD=$(mktemp)
+
+  # fetch latest build info
+  curl --silent --header "Travis-API-Version: 3" --header "Authorization: token $TRAVIS_TOKEN" \
+    --output $TRAVIS_BUILD "https://api.travis-ci.com/repo/ashenm%2Fenvironment/builds?limit=1"
+
+  # extract job id
+  TRAVIS_JOB="$(jq '.builds[0].jobs[0].id' $TRAVIS_BUILD)"
+
+  echo "Using job id: $TRAVIS_JOB"
+
+} || TRAVIS_JOB="$1"
+
+# fallback to user input if api fetch fails
+test -z "$TRAVIS_JOB" || test "$TRAVIS_JOB" = "null" && {
+
+  echo >&2 "Automated job ID fetch failed!"
+
+  while [ -z "$TRAVIS_JOB" ]; do
+    read -p "Job ID: " TRAVIS_JOB
+  done
+
+  curl --silent --show-error --fail --header "Travis-API-Version: 3" --header "Content-Type: application/json" \
+    --header "Authorization: token $TRAVIS_TOKEN" --data "{ \"quiet\": true }" "https://api.travis-ci.com/job/$TRAVIS_JOB"
+
+}
+
+# trigger debug mode
+curl --silent --show-error --fail --request POST --header "Travis-API-Version: 3" \
+  --header "Authorization: token $TRAVIS_TOKEN" "https://api.travis-ci.com/job/$TRAVIS_JOB/debug"
+
+# vim: set expandtab shiftwidth=2 syntax=sh:

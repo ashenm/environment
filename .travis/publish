@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+# errexit
+set -e
+
+# path refs
+TRAVIS_SCRIPTS="$(realpath $TRAVIS_BUILD_DIR/.travis)"
+
+# ensure ssh-agent
+test -n "$SSH_AGENT_PID" || {
+
+  # spawn agent
+  eval $(ssh-agent)
+
+  # import armour
+  echo "${SSH_PXF_PASSPHRASE}" | DISPLAY= SSH_ASKPASS="$TRAVIS_SCRIPTS/echo" ssh-add -t 1h $TRAVIS_BUILD_DIR/launchpad
+
+}
+
+# output for debug
+ssh-add -l | awk '{ print $1, $3 }'
+
+# publish artefacts
+$TRAVIS_BUILD_DIR/linux/packaging/publish
+
+# vim: set expandtab shiftwidth=2 syntax=sh:

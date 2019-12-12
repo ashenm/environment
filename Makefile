@@ -15,8 +15,14 @@ purge: clean
 
 .PHONY: install
 install:
-	sudo apt update && \
-		sudo apt install --yes dput equivs lcab ubuntu-dev-tools
+	sudo apt update
+	sudo apt install --yes --install-recommends \
+		equivs \
+		lcab \
+		openssh-client \
+		python3-paramiko \
+		rsync \
+		ubuntu-dev-tools
 	$(MAKE) --directory linux/packaging install
 
 .PHONY: linux
