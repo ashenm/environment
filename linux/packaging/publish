@@ -56,7 +56,7 @@ test -z "$SIGNATURE_REFERENCE" && {
 PACKAGE="$(awk -F ': ' '$1 == "Source" { print $2; exit }' ${PREFIX}/common/control)"
 
 # sign package(s)
-debsign -k "${SIGNATURE_REFERENCE}" ${PREFIX}/${PACKAGE}_*.changes
+debsign --no-re-sign -k "${SIGNATURE_REFERENCE}" ${PREFIX}/${PACKAGE}_*.changes
 
 # publish package(s)
 dput ${PACKAGE_ARCHIVE:-upstream} ${PREFIX}/${PACKAGE}_*.changes
