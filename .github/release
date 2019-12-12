@@ -88,13 +88,13 @@ echo 1>$STDOUT "${ANSI_YELLOW}Preparing release ${TAG_NAME}${ANSI_RESET}"
 
 # create new lightweight tag
 curl --silent --fail --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --output /dev/null --url "https://api.github.com/repos/$REPOSITORY/git/tags" \
-  --data "{ \"tag\": \"$TAG_NAME\", \"message\": \"Deploy $TAG_NAME\", \"object\": \"$(git show-ref --hash $TAG_NAME)\", \"type\": \"commit\" }"
+  --data "{ \"tag\": \"$TAG_NAME\", \"message\": \"Deploy $TAG_NAME\", \"object\": \"$(git rev-list --max-count=1 $TAG_NAME)\", \"type\": \"commit\" }"
 
 echo 1>$STDOUT "${ANSI_YELLOW}Deploying ${PRERELEASE+pre-}release${ANSI_RESET}"
 
 # create release
 RELEASE_ID="$(curl --fail --silent --show-error --request POST --header "Authorization: token $GITHUB_TOKEN" --url "https://api.github.com/repos/$REPOSITORY/releases" \
-  --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git show-ref --hash $TAG_NAME)\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false}, \"body\": \"Built from $(git show-ref --hash $TAG_NAME)\" }" | jq --raw-output '.id')"
+  --data "{ \"tag_name\": \"$TAG_NAME\", \"target_commitish\": \"$(git rev-list --max-count=1 $TAG_NAME)\", \"name\": \"$TAG_NAME\", \"prerelease\": ${PRERELEASE:-false}, \"body\": \"Built from $(git rev-list --max-count=1 $TAG_NAME)\" }" | jq --raw-output '.id')"
 
 echo 1>$STDOUT "${ANSI_YELLOW}Uploading artifact aliases.cab${ANSI_RESET}"
 
