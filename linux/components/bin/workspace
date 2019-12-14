@@ -170,10 +170,6 @@ test -n "$CONTAINER" && \
 test -n "$DNSNAME" && \
   ARGUMENTS="$ARGUMENTS --hostname $DNSNAME"
 
-# share ssh-agent socket if running
-test -n "$SSH_AUTH_SOCK" && \
-  ARGUMENTS="$ARGUMENTS --volume $SSH_AUTH_SOCK:/run/keyring/ssh:ro"
-
 # directory mount
 test -n "$DIRECTORY" && \
   ARGUMENTS="$ARGUMENTS --volume $DIRECTORY:/home/ubuntu/workspace/`basename $DIRECTORY`"
@@ -193,6 +189,10 @@ test "$GITCONFIG" != "false" && \
 # .ssh
 test "$SSHCONFIG" != "false" && test -d "$HOME/.ssh" && \
   ARGUMENTS="$ARGUMENTS --volume $HOME/.ssh:/home/ubuntu/.ssh:ro"
+
+# share ssh-agent socket if running
+test "$SSHCONFIG" != "false" && test -n "$SSH_AUTH_SOCK" && \
+  ARGUMENTS="$ARGUMENTS --volume $SSH_AUTH_SOCK:/run/keyring/ssh:ro"
 
 # .gnupg
 test "$GNUPGDIR" != "false" && test -d "$HOME/.gnupg" && \
