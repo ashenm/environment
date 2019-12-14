@@ -1,6 +1,4 @@
-DEBIAN_VERSIONS:=debian-stretch debian-buster
-UBUNTU_VERSIONS:=ubuntu-bionic ubuntu-disco ubuntu-eoan
-DISTROS:=$(DEBIAN_VERSIONS) $(UBUNTU_VERSIONS)
+include Makefile.distros
 
 PACKAGE:=$(shell awk -F ': ' '$$1 == "Source" { print $$2; exit }' common/control)
 VERSION:=$(if $(wildcard source.txz),$(shell tar -xJOf source.txz $(PACKAGE)/VERSION),)
