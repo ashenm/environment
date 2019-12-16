@@ -1,6 +1,8 @@
+include linux/packaging/Makefile.distros
+
 .PHONY: build
-build:
-	$(MAKE) linux
+build: linux/components
+	$(MAKE) linux/ubuntu
 	$(MAKE) windows
 
 .PHONY: clean
@@ -25,21 +27,45 @@ install:
 		ubuntu-dev-tools
 	$(MAKE) --directory linux/packaging install
 
-.PHONY: linux
-linux: linux/components
-	$(MAKE) --directory linux/packaging ubuntu
-
-.PHONY: linux/components
-linux/components:
-	$(MAKE) --directory linux/components archive ARCHIVE=/dev/null
-
 .PHONY: linux/binaries
 linux/binaries:
 	$(MAKE) --directory linux/packaging ubuntu PACKAGE_BINARY=true
 
+.PHONY: linux/debian
+.SILENT: linux/debian
+linux/debian:
+	for DISTRO in $(DEBIAN_VERSIONS); do \
+		test -z "$$TRAVIS" || echo "travis_fold:start:$$DISTRO"; \
+		echo "\033[36mBuilding $$DISTRO\033[0m"; \
+		$(MAKE) --directory linux/packaging $$DISTRO; \
+		test -z "$$TRAVIS" || echo "travis_fold:end:$$DISTRO"; \
+	done
+
+.PHONY: linux/components
+.SILENT: linux/components
+linux/components:
+	test -z "$$TRAVIS" || echo "travis_fold:start:linux_components"
+	echo "\033[36mBuilding linux components\033[0m"
+	$(MAKE) --directory linux/components archive ARCHIVE=/dev/null
+	test -z "$$TRAVIS" || echo "travis_fold:end:linux_components"
+
+.PHONY: linux/ubuntu
+.SILENT: linux/ubuntu
+linux/ubuntu:
+	for DISTRO in $(UBUNTU_VERSIONS); do \
+		test -z "$$TRAVIS" || echo "travis_fold:start:$$DISTRO"; \
+		echo "\033[36mBuilding $$DISTRO\033[0m"; \
+		$(MAKE) --directory linux/packaging $$DISTRO; \
+		test -z "$$TRAVIS" || echo "travis_fold:end:$$DISTRO"; \
+	done
+
 .PHONY: windows
+.SILENT: windows
 windows:
+	test -z "$$TRAVIS" || echo "travis_fold:start:windows"
+	echo "\033[36mBuilding windows shims\033[0m"
 	$(MAKE) --directory windows shims
+	test -z "$$TRAVIS" || echo "travis_fold:end:windows"
 
 .PHONY: version
 version:
