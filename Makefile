@@ -68,12 +68,14 @@ windows:
 	test -z "$$TRAVIS" || echo "travis_fold:end:windows"
 
 .PHONY: version
+.SILENT: version
 version:
-	@git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 }'
+	git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 }'
 
 .PHONY: version++
+.SILENT: version++
 version++:
-	@git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 + 0.1 }'
+	git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 + 0.1 }'
 
 .PHONY: release
 release:
