@@ -12,8 +12,9 @@ image:https://travis-ci.com/ashenm/environment.svg?branch=master["Build Status",
 === Debian/Ubuntu
 [source, shell]
 ----
-sudo add-apt-repository --yes ppa:ashenm/ppa \
-  && sudo apt-get -o Dpkg::Options::="--force-overwrite" install environment
+sudo add-apt-repository --yes ppa:ashenm/ppa && \
+  sudo apt-get -o Dpkg::Options::="--force-overwrite" install environment
+sudo sed -i -E 's/^PATH="?([^"]+)"?$/PATH="\/opt\/workspace\/bin\:\1"/' /etc/environment
 ----
 
 === Windows
