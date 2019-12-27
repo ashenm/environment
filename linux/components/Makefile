@@ -9,7 +9,7 @@ help: ## list make targets
 install: ## install upstream
 
 	# {bin,sbin}
-	install -Dm 755 --target-directory $(DESTDIR)$(patsubst ,/usr,$(PREFIX))/bin bin/*
+	install -Dm 755 --target-directory $(DESTDIR)$(patsubst ,/opt/workspace,$(PREFIX))/bin bin/*
 
 	# conffiles
 	find etc -type f -exec install -Dm 644 {} $(DESTDIR)$(PREFIX)/{} \;
