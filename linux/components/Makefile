@@ -24,7 +24,7 @@ install: ## install upstream
 
 	# link ssh-client configuration(s)
 	if [ -z "$$(grep -E 'Include $(PREFIX)/etc/ssh/workspace$$' $(DESTDIR)$(PREFIX)/etc/ssh/ssh_config)" ]; then \
-		echo '' 1>> $(PREFIX)/etc/ssh/ssh_config; \
+		echo '' 1>> $(DESTDIR)$(PREFIX)/etc/ssh/ssh_config; \
 		echo 'Include $(PREFIX)/etc/ssh/workspace' 1>> $(DESTDIR)$(PREFIX)/etc/ssh/ssh_config; \
 	fi
 
