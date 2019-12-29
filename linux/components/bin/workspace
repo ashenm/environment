@@ -28,6 +28,7 @@ Options:
       --hostname string     Container hostname
       --image               Custom container image (default 'ashenm/workspace')
   -n, --name                Assign a name to the container
+      --blank               Avoid all customisations
       --no-agent            Avoid ssh-agent socket sharing
       --no-git              Avoid ~/.gitconfig read-only bind mount
       --no-gpg              Avoid ~/.gnupg bind mount
@@ -72,6 +73,11 @@ while [ "$#" -ne 0 ]
 do
 
   case "$1" in
+
+    --blank)
+      DANGLE=true
+      shift
+      ;;
 
     --no-agent)
       SSH_AUTH_SOCK=
@@ -146,6 +152,10 @@ do
   esac
 
 done
+
+# spawn nullified container on request
+test "$DANGLE" = "true" && \
+  exec docker run $ARGUMENTS $IMAGE bash --login
 
 # check for existing workspace containers
 DEAD="`docker ps --latest --format "{{.Names}}" --filter "ancestor=$IMAGE"`"
