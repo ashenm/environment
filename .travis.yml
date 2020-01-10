@@ -9,7 +9,7 @@ git:
 
 branches:
   except:
-    /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+    /^v\d+(\.\d+)?(\.\d+)?(-\S*)?$/
 
 before_install:
   ./.travis/before_install
