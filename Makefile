@@ -75,7 +75,7 @@ version:
 .PHONY: version++
 .SILENT: version++
 version++:
-	git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); print "v"$$0 + 0.1 }'
+	git tag --list --sort '-creatordate:raw' | awk '{ sub(/^v/, "", $$0); exit } END { sub(/^$$/, "1.0", $$0); printf "v%0.1f\n", $$0 + 0.1 }'
 
 .PHONY: release
 release:
