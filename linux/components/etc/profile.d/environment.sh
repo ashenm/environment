@@ -39,8 +39,8 @@ then
   # alias expand watch
   alias watch='command watch '
 
-  # gnu
-  alias time='command time -v'
+  # gnu specifics
+  alias time='command time -v '
 
   # python
   alias pip='pip3'
