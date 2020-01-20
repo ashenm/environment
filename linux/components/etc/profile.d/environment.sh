@@ -36,6 +36,9 @@ then
   alias commit='git add --all; git commit'
   alias st='git status --ignored'
 
+  # alias expand watch
+  alias watch='command watch '
+
   # gnu
   alias time='command time -v'
 
