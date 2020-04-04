@@ -46,6 +46,9 @@ then
   alias pip='pip3'
   alias python='python3'
 
+  # x11
+  alias open='xdg-open'
+
   # vim
   alias vi='vim'
   alias vim='vim -p'
