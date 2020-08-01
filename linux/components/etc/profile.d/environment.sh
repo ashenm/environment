@@ -29,6 +29,9 @@ then
   alias mv='mv -i'
   alias rm='rm -i'
 
+  # axel
+  alias axel='axel --alternate'
+
   # git
   alias push='git push'
   alias log='git log --oneline'
