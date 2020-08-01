@@ -1,4 +1,4 @@
-#!/usr/bin/evn sh
+#!/usr/bin/env sh
 #
 # Trigger Reverse Dependency Builds
 # https://github.com/ashenm/environment
