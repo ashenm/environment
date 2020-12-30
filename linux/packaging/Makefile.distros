@@ -1,6 +1,6 @@
 DEBIAN_VERSIONS:=debian-stretch debian-buster
 
-UBUNTU_VERSIONS:=ubuntu-bionic ubuntu-eoan ubuntu-focal
+UBUNTU_VERSIONS:=ubuntu-bionic ubuntu-focal
 
 DISTROS:=$(DEBIAN_VERSIONS) $(UBUNTU_VERSIONS)
 
