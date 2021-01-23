@@ -36,7 +36,7 @@ deploy:
     skip_cleanup: true
 
 after_script:
-  ./.travis/culminate
+  '[ "$TRAVIS_BRANCH" != "master" ] || ./.travis/culminate'
 
 notifications:
   slack:
