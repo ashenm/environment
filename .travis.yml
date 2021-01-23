@@ -4,9 +4,6 @@ dist:
 language:
   minimal
 
-git:
-  depth: false
-
 branches:
   except:
     /^v\d+(\.\d+)?(\.\d+)?(-\S*)?$/
@@ -18,10 +15,11 @@ install:
   make install
 
 before_script:
-  make release
+  git pull --rebase --tags
 
 script:
-  make build
+  - make release
+  - make build
 
 deploy:
   - provider: script
