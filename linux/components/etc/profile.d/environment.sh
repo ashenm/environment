@@ -33,7 +33,7 @@ then
   alias axel='axel --alternate'
 
   # git
-  alias push='git push'
+  alias push='git push --set-upstream'
   alias log='git log --oneline'
   alias pull='git pull --rebase'
   alias commit='git add --all; git commit'
